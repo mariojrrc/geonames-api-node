@@ -1,6 +1,5 @@
 const { omit } = require("lodash");
-const { ValidationException, DuplicationException } = require("koa-mongo-crud");
-const { v4: uuidv4 } = require("uuid");
+const { ValidationException, DuplicationException, Uuid } = require("koa-mongo-crud");
 const ApiError = require("./api-error");
 
 class GeonamesBaseService {
@@ -9,7 +8,7 @@ class GeonamesBaseService {
     this.context = opts.context;
     this.scope = this.context.state.container;
     this.logger = opts.logger;
-    this.uuid = uuidv4;
+    this.uuid = Uuid.v4c;
   }
 
   sanitize(response, omitting) {

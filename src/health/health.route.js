@@ -1,8 +1,8 @@
 const { createController } = require("awilix-koa");
 const responseBuilder = require("../common/response-builder");
-const ZooxPayBaseController = require("../common/baseController");
+const GeonamesBaseController = require("../common/baseController");
 
-class Health extends ZooxPayBaseController {
+class Health extends GeonamesBaseController {
   get(ctx) {
     const versionNumber = process.env.npm_package_version;
     responseBuilder.createResponse(
