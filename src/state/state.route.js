@@ -1,5 +1,6 @@
 const { createController } = require("awilix-koa");
 const { AuthMiddleware } = require("koa-mongo-crud");
+const isUuid = require("is-uuid");
 const responseBuilder = require("../common/response-builder");
 const GeonamesBaseController = require("../common/baseController");
 
@@ -44,6 +45,24 @@ class State extends GeonamesBaseController {
     this.assert(ctx, 200, response);
     responseBuilder.createResponse(ctx, response.body, response.statusCode);
   }
+
+  async bulk(ctx) {
+    const { ids } = ctx.request.body;
+    if (!ids || (ids || []).filter((item) => isUuid.v4(item)).length === 0) {
+      return responseBuilder.createResponse(
+        ctx,
+        { message: "Ids must be an array of valid uuids" },
+        400
+      );
+    }
+    const response = await this.stateService.bulk(ids);
+    this.assert(ctx, 200, response);
+    return responseBuilder.createResponse(
+      ctx,
+      response.body,
+      response.statusCode
+    );
+  }
 }
 
 module.exports = createController(State)
@@ -57,4 +76,5 @@ module.exports = createController(State)
   .delete("/v1/state/:id", "cancel")
   .post("/v1/state", "create")
   .get("/v1/state/:id", "get")
-  .put("/v1/state/:id", "update");
+  .put("/v1/state/:id", "update")
+  .post("/v1/state/bulk", "bulk");

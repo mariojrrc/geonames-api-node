@@ -30,8 +30,18 @@ describe("State", () => {
       expect(res.statusCode).toBe(401);
     });
 
+    it("Should not delete state", async () => {
+      const res = await request.delete(`/v1/state/${stateId}`);
+      expect(res.statusCode).toBe(401);
+    });
+
     it("Should not list states", async () => {
       const res = await request.get(`/v1/state`);
+      expect(res.statusCode).toBe(401);
+    });
+
+    it("Should not bulk states", async () => {
+      const res = await request.get(`/v1/state/bulk`);
       expect(res.statusCode).toBe(401);
     });
   });
@@ -58,6 +68,16 @@ describe("State", () => {
     it("Should not update state", async () => {
       const res = await request.put(`/v1/state/${stateId}`);
       expect(res.statusCode).toBe(422);
+    });
+
+    it("Should not delete state", async () => {
+      const res = await request.delete(`/v1/state/${stateId}`);
+      expect(res.statusCode).toBe(404);
+    });
+
+    it("Should not bulk states", async () => {
+      const res = await request.post(`/v1/state/bulk`);
+      expect(res.statusCode).toBe(400);
     });
   });
 
@@ -100,6 +120,34 @@ describe("State", () => {
     it("Should list states", async () => {
       const res = await request.get(`/v1/state`);
       expect(res.statusCode).toBe(200);
+    });
+
+    it("Should bulk states", async () => {
+      // add one more state
+      const statePayload = {
+        name: 'Rio de Janeiro',
+        shortName: 'RJ'
+      }
+      const res = await request.post(`/v1/state`).send(statePayload);
+      expect(res.statusCode).toBe(201);
+      expect(res.body).toHaveProperty('id');
+      const stateId2 = res.body.id;
+
+      const bulkResponse = await request.post(`/v1/state/bulk`).send({ids: [ stateId, stateId2 ]});
+      expect(bulkResponse.statusCode).toBe(200);
+      expect(bulkResponse.body).toHaveLength(2);
+    });
+
+    it("Should delete state", async () => {
+      const statePayload = {
+        name: "Rio de Janeiro 3",
+        shortName: "RJ",
+      };
+      const newStateRes = await request.post(`/v1/state`).send(statePayload);
+      expect(newStateRes.statusCode).toBe(201);
+      expect(newStateRes.body.name).toBe('Rio de Janeiro 3')
+      const res = await request.delete(`/v1/state/${newStateRes.body.id}`);
+      expect(res.statusCode).toBe(204);
     });
   });
 

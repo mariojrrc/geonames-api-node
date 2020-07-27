@@ -71,6 +71,11 @@ class StateService extends GeonamesBaseservice {
     const state = await this.repository.update(id, data);
     return this.repository.update(id, { ...state });
   }
+
+  async bulk(ids) {
+    const states = await this.repository.bulk(ids);
+    return this.sanitizedResponse(200, states);
+  }
 }
 
 module.exports = StateService;
