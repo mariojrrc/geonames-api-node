@@ -123,17 +123,28 @@ describe("State", () => {
     });
 
     it("Should bulk states", async () => {
-      // add one more state
-      const statePayload = {
-        name: 'Rio de Janeiro',
-        shortName: 'RJ'
-      }
-      const res = await request.post(`/v1/state`).send(statePayload);
-      expect(res.statusCode).toBe(201);
-      expect(res.body).toHaveProperty('id');
-      const stateId2 = res.body.id;
 
-      const bulkResponse = await request.post(`/v1/state/bulk`).send({ids: [ stateId, stateId2 ]});
+      // add one more state
+      let statePayload = {
+        name: 'São Paulo',
+        shortName: 'SP'
+      }
+      const res1 = await request.post(`/v1/state`).send(statePayload);
+      expect(res1.statusCode).toBe(201);
+      expect(res1.body).toHaveProperty('id');
+      const stateId1 = res1.body.id;
+
+      // add one more state
+      statePayload = {
+        name: 'Santa Catarina',
+        shortName: 'SC'
+      }
+      const res2 = await request.post(`/v1/state`).send(statePayload);
+      expect(res2.statusCode).toBe(201);
+      expect(res2.body).toHaveProperty('id');
+      const stateId2 = res2.body.id;
+
+      const bulkResponse = await request.post(`/v1/state/bulk`).send({ids: [ stateId1, stateId2 ]});
       expect(bulkResponse.statusCode).toBe(200);
       expect(bulkResponse.body).toHaveLength(2);
     });
