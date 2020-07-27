@@ -1,5 +1,9 @@
 const { omit } = require("lodash");
-const { ValidationException, DuplicationException, Uuid } = require("koa-mongo-crud");
+const {
+  ValidationException,
+  DuplicationException,
+  Uuid,
+} = require("koa-mongo-crud");
 const ApiError = require("./api-error");
 
 class GeonamesBaseService {

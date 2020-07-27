@@ -4,7 +4,7 @@ module.exports = () => ({
   type: "object",
   properties: {
     name: { type: "string", minLength: 1, maxLength: 255 },
-    stateId: { type: "string", format: 'uuid' },
+    stateId: { type: "string", format: "uuid" },
     createdAt: { instanceOf: "Date" },
     updatedAt: { instanceOf: "Date" },
   },

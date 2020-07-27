@@ -1,7 +1,7 @@
 const Ajv = require("ajv");
 const { ValidationException } = require("koa-mongo-crud");
 const StateSchema = require("../state/state.model");
-const CitySchema = require("../city/city.model")
+const CitySchema = require("../city/city.model");
 
 const ajv = new Ajv({ allErrors: true });
 
@@ -19,10 +19,9 @@ const validateCitySchema = (payload) => {
     return new ValidationException(ajv.errors);
   }
   return payload;
-}
-
+};
 
 module.exports = {
   validateStateSchema,
-  validateCitySchema
+  validateCitySchema,
 };
