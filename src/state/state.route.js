@@ -1,6 +1,7 @@
 const { createController } = require("awilix-koa");
 const { AuthMiddleware } = require("koa-mongo-crud");
 const isUuid = require("is-uuid");
+const rateLimit = require("koa-ratelimit");
 const responseBuilder = require("../common/response-builder");
 const GeonamesBaseController = require("../common/baseController");
 
@@ -66,12 +67,26 @@ class State extends GeonamesBaseController {
 }
 
 module.exports = createController(State)
-  .before(
+  .before([
     AuthMiddleware(
       global.appConfig.auth,
       global.appConfig.authAllowedRoutes || []
-    )
-  )
+    ),
+    rateLimit({
+      driver: "memory",
+      db: new Map(),
+      duration: 60 * 1000 * 1000, // 1 min
+      errorMessage: "Sometimes You Just Have to Slow Down.",
+      id: (ctx) => ctx.ip,
+      headers: {
+        remaining: "Rate-Limit-Remaining",
+        reset: "Rate-Limit-Reset",
+        total: "Rate-Limit-Total",
+      },
+      max: 100,
+      disableHeader: false,
+    }),
+  ])
   .get("/v1/state", "list")
   .delete("/v1/state/:id", "cancel")
   .post("/v1/state", "create")

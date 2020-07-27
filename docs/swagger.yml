@@ -1,0 +1,437 @@
+servers:
+  - url: https://localhost
+openapi: "3.0.0"
+info:
+  title: API GeoNames Vue
+  version: 1.0.4
+  description: API para gerenciamento e consumo de cidades e estados
+  contact:
+    name: Mario Costa
+    email: mariojr.rcosta@gmail.com
+security:
+  - ApiKeyAuth: []
+paths:
+  '/v1/state':
+    get:
+      tags:
+        - "state"
+      summary: Busca todos os estados
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: "string"
+            example: "Rio de Janeiro"
+          required: false
+          description: Nome completo para filtro.
+        - in: query
+          name: shorName
+          schema:
+            type: "string"
+            example: "RJ"
+          required: false
+          description: Nome abreviado (UF) para filtro.
+        - in: query
+          name: deleted
+          schema:
+            type: integer
+            example: 1
+          required: false
+          description: Flag para exibir itens deletados
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: "name"
+          required: false
+          description: Flag para identificar por qual campo deve ser feita ordenação
+        - in: query
+          name: order
+          schema:
+            type: integer
+            format: int32
+            example: 1
+          required: false
+          description: Flag para order items (-1 = decrescente e 1 para crescente)
+      responses:
+        200:
+          description: Estado collection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StateListOk"
+        429:
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitError'
+    post:
+      tags:
+        - state
+      summary: Cadastra um estado
+      requestBody:
+          description: Objeto do estado
+          content:
+            application/json:
+              schema:
+                properties:
+                  name:
+                    type: string
+                    example: "Rio de Janeiro"
+                    required: true
+                  shortName:
+                    type: string
+                    example: "RJ"
+                    required: true
+      responses:
+        422:
+          description: Falha na validação dos dados
+          content: {}
+        201:
+          description: Item criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstateObject'
+  '/v1/state/{id}':
+    put:
+      tags:
+        - state
+      summary: Atualiza um estado
+      requestBody:
+        description: Objeto do estado
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  example: "Rio de Janeiro"
+                  required: false
+                shortName:
+                  type: string
+                  example: "RJ"
+                  required: false
+      responses:
+        422:
+          description: Falha na validação dos dados
+          content: {}
+        200:
+          description: Item atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstateObject'
+    delete:
+      tags:
+        - state
+      summary: Marca um estado como deletado
+      responses:
+        200:
+          description: Item atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstateObject'
+
+  '/v1/city':
+    get:
+      tags:
+        - city
+      summary: Busca todas as cidades
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: "string"
+            example: "Rio de Janeiro"
+          required: false
+          description: Nome completo para filtro.
+        - in: query
+          name: stateId
+          schema:
+            type: "string"
+            format: uuid
+            example: "90e55853-16ca-49a9-90bd-1dee256ab233"
+          required: false
+          description: Id do estado para filtro.
+        - in: query
+          name: deleted
+          schema:
+            type: integer
+            example: 1
+          required: false
+          description: Flag para exibir itens deletados
+        - in: query
+          name: sort
+          schema:
+            type: string
+            example: "name"
+          required: false
+          description: Flag para identificar por qual campo deve ser feita ordenação
+        - in: query
+          name: order
+          schema:
+            type: integer
+            format: int32
+            example: 1
+          required: false
+          description: Flag para order items (-1 = decrescente e 1 para crescente)
+      responses:
+        200:
+          description: Cidade collection
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CityListOk"
+        429:
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitError'
+    post:
+      tags:
+        - city
+      summary: Cadastra uma cidade
+      requestBody:
+          description: Objeto da cidade
+          content:
+            application/json:
+              schema:
+                properties:
+                  name:
+                    type: string
+                    example: "Rio de Janeiro"
+                    required: true
+                  stateId:
+                    type: string
+                    format: uuid
+                    example: "90e55853-16ca-49a9-90bd-1dee256ab233"
+                    required: true
+      responses:
+        422:
+          description: Falha na validação dos dados
+          content: {}
+        201:
+          description: Item criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityObject'
+  '/v1/city/{id}':
+    put:
+      tags:
+        - city
+      summary: Atualiza uma cidade
+      requestBody:
+        description: Objeto da cidade
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  example: "Rio de Janeiro"
+                  required: false
+                stateId:
+                  type: string
+                  format: uuid
+                  example: "90e55853-16ca-49a9-90bd-1dee256ab233"
+                  required: false
+      responses:
+        422:
+          description: Falha na validação dos dados
+          content: {}
+        200:
+          description: Item atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityObject'
+    delete:
+      tags:
+        - city
+      summary: Marca uma cidade como deletado
+      responses:
+        200:
+          description: Item atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CityObject'
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-Api-Key
+  schemas:
+    RateLimitError:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+          example: "Too Many Requests"
+        type:
+          type: "string"
+          format: "uri"
+          example: "https://httpstatus.com/429"
+        status:
+          type: "integer"
+          example: 429
+        detail:
+          type: "string"
+          example: "Sometimes You Just Have to Slow Down."
+    StateListOk:
+      type: "object"
+      properties:
+        _total_items:
+          type: integer
+          format: int32
+        _page:
+          type: integer
+          format: int32
+        _page_count:
+          type: integer
+          format: int32
+        _links:
+          type: object
+          properties:
+            self:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example:
+                    "http://{{host}}/v1/state?page=1"
+        _embedded:
+          type: object
+          properties:
+            states:
+              type: "array"
+              items:
+                $ref: '#/components/schemas/EstateObject'
+    CityListOk:
+      type: "object"
+      properties:
+        _total_items:
+          type: integer
+          format: int32
+        _page:
+          type: integer
+          format: int32
+        _page_count:
+          type: integer
+          format: int32
+        _links:
+          type: object
+          properties:
+            self:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example:
+                    "http://{{host}}/v1/state?page=1"
+        _embedded:
+          type: object
+          properties:
+            states:
+              type: "array"
+              items:
+                $ref: '#/components/schemas/CityObject'
+
+    EstateObject:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+          example:
+            "90e55853-16ca-49a9-90bd-1dee256ab233"
+        name:
+          type: "string"
+          format: "string"
+          example: "Rio de Janeiro"
+        shortName:
+          type: "string"
+          format: "string"
+          example: "RJ"
+        createdAt:
+          type: string
+          format: 'date-time'
+          example:
+            "2020-06-26T01:50:37-03:00"
+        updatedAt:
+          type: string
+          format: 'date-time'
+          example:
+            "2020-06-26T01:50:37-03:00"
+        deleted:
+          type: boolean
+          example: false
+        deletedAt:
+          type: string
+          format: 'date-time'
+          example:
+            "2020-06-26T01:50:37-03:00"
+        _links:
+          type: object
+          properties:
+            self:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example:
+                    "http://{{host}}/v1/state/90e55853-16ca-49a9-90bd-1dee256ab233"
+    CityObject:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+          format: "uuid"
+          example:
+            "90e55853-16ca-49a9-90bd-1dee256ab234"
+        name:
+          type: "string"
+          format: "string"
+          example: "Rio de Janeiro"
+        stateId:
+          type: string
+          format: uuid
+          example:
+            "90e55853-16ca-49a9-90bd-1dee256ab233"
+        createdAt:
+          type: string
+          format: 'date-time'
+          example:
+            "2020-06-26T01:50:37-03:00"
+        updatedAt:
+          type: string
+          format: 'date-time'
+          example:
+            "2020-06-26T01:50:37-03:00"
+        deleted:
+          type: boolean
+          example: false
+        deletedAt:
+          type: string
+          format: 'date-time'
+          example:
+            "2020-06-26T01:50:37-03:00"
+        _links:
+          type: object
+          properties:
+            self:
+              type: object
+              properties:
+                href:
+                  type: string
+                  example:
+                    "http://{{host}}/v1/state/90e55853-16ca-49a9-90bd-1dee256ab234"
+
+
+

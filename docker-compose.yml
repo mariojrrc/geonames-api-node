@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  geonames-mongo:
+    image: mongo:3.4
+    container_name: geonames-mongo
+    volumes:
+      - ./.docker/data/mongo:/data/db:rw
+    ports:
+      - "27017:27017"
+    networks:
+      - geonames-network
+
+  geonames-node:
+    image: mariojrrc/geonames-node
+    container_name: geonames-node
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: mongodb://geonames-mongo:27017
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/var/www/html
+    depends_on:
+      - geonames-mongo
+    networks:
+      - geonames-network
+
+  geonames-api:
+    image: nginx:latest
+    container_name: geonames-api
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+      - ./.docker/nginx/api.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - geonames-node
+    networks:
+      - geonames-network
+networks:
+  geonames-network:
+    driver: bridge

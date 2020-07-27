@@ -37,7 +37,7 @@ app.use(
   koaSwagger({
     routePrefix: "/docs",
     swaggerOptions: {
-      url: `${config.hostName}/swagger.yaml`,
+      url: `swagger.yml`,
     },
   })
 );
@@ -64,7 +64,7 @@ app.use(DebugMiddleware);
 
 app.use(loadControllers("./src/**/*.route.js", { cwd: __dirname }));
 
-const server = app.listen(config.web.port || 8080, () => {
+const server = app.listen(config.web.port || 3000, () => {
   const host = server.address().address;
   // eslint-disable-next-line prefer-destructuring
   const port = server.address().port;

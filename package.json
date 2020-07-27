@@ -41,6 +41,7 @@
     "koa-logger": "^3.2.1",
     "koa-mongo-crud": "^1.2.5",
     "koa-qs": "^2.0.0",
+    "koa-ratelimit": "^4.2.1",
     "koa-router": "^8.0.8",
     "koa-static": "^5.0.0",
     "koa2-cors": "^2.0.6",
