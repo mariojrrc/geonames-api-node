@@ -2,7 +2,7 @@ const supertest = require("supertest");
 const defaults = require("superagent-defaults");
 
 const app = require("../../index");
-const { AuthorizationHeader } = require("../common.testcases");
+const { AuthorizationHeader, dropCollection, populateCollection } = require("../common.testcases");
 
 describe("State", () => {
   let authHeaders;
@@ -124,27 +124,24 @@ describe("State", () => {
 
     it("Should bulk states", async () => {
 
-      // add one more state
-      let statePayload = {
+      const now = new Date();
+      const state1 = {
+        _id: '4e62dba1-88be-4301-ae36-93a61455772b',
+        name: 'Rio',
+        shortName: 'RJ',
+        createdAt: now,
+        updatedAt: now,
+      }
+      const state2 = {
+        _id: '4e62dba1-88be-4301-ae36-93a61455772c',
         name: 'São Paulo',
-        shortName: 'SP'
+        shortName: 'SP',
+        createdAt: now,
+        updatedAt: now,
       }
-      const res1 = await request.post(`/v1/state`).send(statePayload);
-      expect(res1.statusCode).toBe(201);
-      expect(res1.body).toHaveProperty('id');
-      const stateId1 = res1.body.id;
 
-      // add one more state
-      statePayload = {
-        name: 'Santa Catarina',
-        shortName: 'SC'
-      }
-      const res2 = await request.post(`/v1/state`).send(statePayload);
-      expect(res2.statusCode).toBe(201);
-      expect(res2.body).toHaveProperty('id');
-      const stateId2 = res2.body.id;
-
-      const bulkResponse = await request.post(`/v1/state/bulk`).send({ids: [ stateId1, stateId2 ]});
+      await populateCollection('states', [state1, state2]);
+      const bulkResponse = await request.post(`/v1/state/bulk`).send({ids: [ state1._id, state2._id ]});
       expect(bulkResponse.statusCode).toBe(200);
       expect(bulkResponse.body).toHaveLength(2);
     });
@@ -162,7 +159,8 @@ describe("State", () => {
     });
   });
 
-  afterAll((done) => {
+  afterAll(async (done) => {
+    await dropCollection('states');
     app.close(done);
   });
 });

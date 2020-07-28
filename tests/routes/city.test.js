@@ -2,7 +2,7 @@ const supertest = require("supertest");
 const defaults = require("superagent-defaults");
 
 const app = require("../../index");
-const { AuthorizationHeader } = require("../common.testcases");
+const { AuthorizationHeader, dropCollection, populateCollection } = require("../common.testcases");
 
 describe("City", () => {
   let authHeaders;
@@ -105,7 +105,8 @@ describe("City", () => {
     });
   });
 
-  afterAll((done) => {
+  afterAll(async (done) => {
+    await dropCollection('cities');
     app.close(done);
   });
 });
