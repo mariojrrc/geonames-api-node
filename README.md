@@ -22,11 +22,12 @@ The endpoint's documentation is located in `/docs` folder. It was written on top
 
 1. Run `npm install`
 2. Run `npm run dev`
-3. Make calls to the endpoints via [Postman](https://www.getpostman.com/) or similar in the following address `0.0.0.0:3000/v1/state`
+3. Optionally run `NODE_ENV=development node command.js populate:db --drop` to seed the database.
+4. Make calls to the endpoints via [Postman](https://www.getpostman.com/) or similar in the following address `0.0.0.0:3000/v1/state`
 
 **Using it with Docker**
-1. `docker build -t mariojrrc/geonames-node .`
-2. `docker-compose up`
+1. `docker-compose up -d`
+2. Optionally run `docker exec -it geonames-node bash -c 'node command.js populate:db --drop'` to seed the database. 
 3. Make calls to the endpoints via [Postman](https://www.getpostman.com/) or similar in the following address `0.0.0.0:8080/v1/state`
 
 ## Running tests

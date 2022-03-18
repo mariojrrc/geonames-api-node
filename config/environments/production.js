@@ -20,7 +20,7 @@ module.exports = {
       file: { type: "file", filename: logPath },
     },
     categories: {
-      default: { appenders: ["console"], level: "info" },
+      default: { appenders: ["console", "file"], level: "info" },
     },
   },
 };
