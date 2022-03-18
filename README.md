@@ -1,8 +1,6 @@
 GeoNames API Node/MongoDB Example
 =================================================
 
-[![Build Status](https://semaphoreci.com/api/v1/mariojrrc/geonames-api-node/branches/master/badge.svg)](https://semaphoreci.com/mariojrrc/geonames-api-node)
-
 This project is an example of REST API written in Node 12 that makes use of [Koa](https://koajs.com/) framework and [MongoDB](https://mongodb.com/).
 
 It basically has two endpoints that allow us to perform some CRUD operations:
