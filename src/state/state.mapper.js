@@ -65,6 +65,8 @@ class StateMapper extends BaseMapper {
 
     if (params.name) query.$text = { $search: params.name };
 
+    if (params.shortName) query.$text = { $search: params.shortName };
+
     const list = await this.collection
       .find(query)
       .project(project)

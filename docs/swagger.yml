@@ -1,21 +1,21 @@
 servers:
-  - url: https://localhost
+  - url: http://localhost:3000
 openapi: "3.0.0"
 info:
-  title: API GeoNames Vue
+  title: API GeoNames Node
   version: 1.0.4
-  description: API para gerenciamento e consumo de cidades e estados
+  description: Simple API for city and state CRUD operations.
   contact:
     name: Mario Costa
     email: mariojr.rcosta@gmail.com
 security:
-  - ApiKeyAuth: []
+  - basicAuth: []
 paths:
   '/v1/state':
     get:
       tags:
         - "state"
-      summary: Busca todos os estados
+      summary: Fetch all states
       parameters:
         - in: query
           name: name
@@ -23,28 +23,28 @@ paths:
             type: "string"
             example: "Rio de Janeiro"
           required: false
-          description: Nome completo para filtro.
+          description: Full name for filtering.
         - in: query
-          name: shorName
+          name: shortName
           schema:
             type: "string"
             example: "RJ"
           required: false
-          description: Nome abreviado (UF) para filtro.
+          description: Abbreviation for filtering.
         - in: query
           name: deleted
           schema:
             type: integer
             example: 1
           required: false
-          description: Flag para exibir itens deletados
+          description: Flag to show deleted documents
         - in: query
           name: sort
           schema:
             type: string
             example: "name"
           required: false
-          description: Flag para identificar por qual campo deve ser feita ordenação
+          description: Flag to define field to sort on
         - in: query
           name: order
           schema:
@@ -52,10 +52,10 @@ paths:
             format: int32
             example: 1
           required: false
-          description: Flag para order items (-1 = decrescente e 1 para crescente)
+          description: Flag to define sort order (-1 descending and 1 ascending)
       responses:
         200:
-          description: Estado collection
+          description: State collection
           content:
             application/json:
               schema:
@@ -69,9 +69,9 @@ paths:
     post:
       tags:
         - state
-      summary: Cadastra um estado
+      summary: Creates a state
       requestBody:
-          description: Objeto do estado
+          description: State object
           content:
             application/json:
               schema:
@@ -86,10 +86,10 @@ paths:
                     required: true
       responses:
         422:
-          description: Falha na validação dos dados
+          description: Validation failure
           content: {}
         201:
-          description: Item criado com sucesso
+          description: Item successfully created
           content:
             application/json:
               schema:
@@ -98,9 +98,9 @@ paths:
     put:
       tags:
         - state
-      summary: Atualiza um estado
+      summary: Updates a state
       requestBody:
-        description: Objeto do estado
+        description: State object
         content:
           application/json:
             schema:
@@ -115,10 +115,10 @@ paths:
                   required: false
       responses:
         422:
-          description: Falha na validação dos dados
+          description: Validation failure
           content: {}
         200:
-          description: Item atualizado com sucesso
+          description: Item successfully updated
           content:
             application/json:
               schema:
@@ -126,10 +126,10 @@ paths:
     delete:
       tags:
         - state
-      summary: Marca um estado como deletado
+      summary: Flags a state as deleted
       responses:
         200:
-          description: Item atualizado com sucesso
+          description: Item successfully updated
           content:
             application/json:
               schema:
@@ -139,7 +139,7 @@ paths:
     get:
       tags:
         - city
-      summary: Busca todas as cidades
+      summary: Fetch all cities
       parameters:
         - in: query
           name: name
@@ -147,7 +147,7 @@ paths:
             type: "string"
             example: "Rio de Janeiro"
           required: false
-          description: Nome completo para filtro.
+          description: Full name for filtering.
         - in: query
           name: stateId
           schema:
@@ -155,21 +155,21 @@ paths:
             format: uuid
             example: "90e55853-16ca-49a9-90bd-1dee256ab233"
           required: false
-          description: Id do estado para filtro.
+          description: StateId for filtering.
         - in: query
           name: deleted
           schema:
             type: integer
             example: 1
           required: false
-          description: Flag para exibir itens deletados
+          description: Flag to show deleted documents
         - in: query
           name: sort
           schema:
             type: string
             example: "name"
           required: false
-          description: Flag para identificar por qual campo deve ser feita ordenação
+          description: Flag to define field to sort on
         - in: query
           name: order
           schema:
@@ -177,10 +177,10 @@ paths:
             format: int32
             example: 1
           required: false
-          description: Flag para order items (-1 = decrescente e 1 para crescente)
+          description: Flag to define sort order (-1 descending and 1 ascending)
       responses:
         200:
-          description: Cidade collection
+          description: City collection
           content:
             application/json:
               schema:
@@ -194,9 +194,9 @@ paths:
     post:
       tags:
         - city
-      summary: Cadastra uma cidade
+      summary: Creates a city
       requestBody:
-          description: Objeto da cidade
+          description: City object
           content:
             application/json:
               schema:
@@ -212,10 +212,10 @@ paths:
                     required: true
       responses:
         422:
-          description: Falha na validação dos dados
+          description: Validation failure
           content: {}
         201:
-          description: Item criado com sucesso
+          description: Item successfully created
           content:
             application/json:
               schema:
@@ -224,9 +224,9 @@ paths:
     put:
       tags:
         - city
-      summary: Atualiza uma cidade
+      summary: Updates a city
       requestBody:
-        description: Objeto da cidade
+        description: City object
         content:
           application/json:
             schema:
@@ -242,10 +242,10 @@ paths:
                   required: false
       responses:
         422:
-          description: Falha na validação dos dados
+          description: Validation failure
           content: {}
         200:
-          description: Item atualizado com sucesso
+          description: Item successfully updated
           content:
             application/json:
               schema:
@@ -253,20 +253,19 @@ paths:
     delete:
       tags:
         - city
-      summary: Marca uma cidade como deletado
+      summary: Flags a city as deleted
       responses:
         200:
-          description: Item atualizado com sucesso
+          description: Item successfully updated
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CityObject'
 components:
   securitySchemes:
-    ApiKeyAuth:
-      type: apiKey
-      in: header
-      name: X-Api-Key
+    basicAuth:
+      type: http
+      scheme: basic
   schemas:
     RateLimitError:
       type: "object"

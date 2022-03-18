@@ -24,6 +24,9 @@
   },
   "license": "UNLICENSED",
   "private": true,
+  "engines": {
+    "node": ">=12"
+  },
   "dependencies": {
     "ajv": "^6.12.3",
     "awilix": "4.2.6",
