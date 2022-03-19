@@ -9,7 +9,7 @@ module.exports = async (ctx, next) => {
     }
     ctx.status = err.status || 500;
     const detail =
-      process.env.NODE_ENV !== "production"
+      process.env.NODE_ENV === "production"
         ? err.message || err.errors
         : `${err.message || err.errors}\nStacktrace:\n${err.stack}`;
     ctx.body = {
