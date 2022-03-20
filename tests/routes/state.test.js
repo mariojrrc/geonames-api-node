@@ -117,9 +117,16 @@ describe("State", () => {
       expect(res.body.name).toBe('Rio de Janeiro 2');
     });
 
-    it("Should list states", async () => {
-      const res = await request.get(`/v1/state`);
+    it("Should empty list states with name filter", async () => {
+      const res = await request.get(`/v1/state?name=xyz`);
       expect(res.statusCode).toBe(200);
+      expect(res.body._embedded.states.length).toBe(0);
+    });
+
+    it("Should list states with name filter", async () => {
+      const res = await request.get(`/v1/state?name=Rio`);
+      expect(res.statusCode).toBe(200);
+      expect(res.body._embedded.states.length).toBe(1);
     });
 
     it("Should bulk states", async () => {

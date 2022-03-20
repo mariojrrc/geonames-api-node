@@ -63,9 +63,10 @@ class StateMapper extends BaseMapper {
       query.createdAt = createdAt;
     }
 
-    if (params.name) query.$text = { $search: params.name };
+    if (params.name) query.name = { $regex: new RegExp(`${params.name}`, "i") };
 
-    if (params.shortName) query.$text = { $search: params.shortName };
+    if (params.shortName)
+      query.shortName = { $regex: new RegExp(`${params.shortName}`, "i") };
 
     const list = await this.collection
       .find(query)

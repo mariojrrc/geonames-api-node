@@ -63,7 +63,7 @@ class CityMapper extends BaseMapper {
       query.createdAt = createdAt;
     }
 
-    if (params.name) query.$text = { $search: params.name };
+    if (params.name) query.name = { $regex: new RegExp(`${params.name}`, "i") };
 
     const list = await this.collection
       .find(query)

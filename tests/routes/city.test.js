@@ -103,6 +103,18 @@ describe("City", () => {
       const res = await request.get(`/v1/city`);
       expect(res.statusCode).toBe(200);
     });
+
+    it("Should empty list cities with name filter", async () => {
+      const res = await request.get(`/v1/city?name=xyz`);
+      expect(res.statusCode).toBe(200);
+      expect(res.body._embedded.cities.length).toBe(0);
+    });
+
+    it("Should list cities with name filter", async () => {
+      const res = await request.get(`/v1/city?name=Rio`);
+      expect(res.statusCode).toBe(200);
+      expect(res.body._embedded.cities.length).toBe(1);
+    });
   });
 
   afterAll(async (done) => {
