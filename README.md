@@ -1,7 +1,7 @@
 GeoNames API Node/MongoDB Example
 =================================================
 
-This project is an example of REST API written in Node 12 that makes use of [Koa](https://koajs.com/) framework and [MongoDB](https://mongodb.com/).
+This project is an example of REST API written in Node 12 that makes use of [Koa](https://koajs.com/) framework, [Awilix](https://github.com/jeffijoe/awilix) container and [MongoDB](https://mongodb.com/).
 
 It basically has two endpoints that allow us to perform some CRUD operations:
 
@@ -18,7 +18,7 @@ The endpoint's documentation is located in `/docs` folder. It was written on top
 
 ## Running the project
 
-**OBS: Node.JS and MongoDB are requeried**
+**OBS: Node.JS and MongoDB are required**
 
 1. Run `npm install`
 2. Run `npm run dev`
