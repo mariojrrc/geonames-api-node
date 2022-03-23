@@ -33,6 +33,10 @@ The endpoint's documentation is located in `/docs` folder. It was written on top
 ## Running tests
 1. Run `npm run test`
 
+## Live Demo
+1. You can check the api running on Heroku by clicking [here](https://geonames-api-node.herokuapp.com/health).
+2. You can check the simple Vue.js app running on Heroku by clicking [here](https://geonames-vue.herokuapp.com).
+
 ## Questions and Suggestions?
 Drop me an [e-mail](mailto:mariojr.rcosta@gmail.com)
 
