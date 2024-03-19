@@ -12,7 +12,7 @@ services:
       - geonames-network
 
   geonames-node:
-    image: mariojrrc/geonames-node
+    build: .
     container_name: geonames-node
     restart: unless-stopped
     environment:
