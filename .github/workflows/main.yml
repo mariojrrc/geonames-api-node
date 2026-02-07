@@ -24,7 +24,7 @@ jobs:
           cache: "npm"
 
       - name: MongoDB in GitHub Actions
-        uses: supercharge/mongodb-github-action@1.16.0
+        uses: supercharge/mongodb-github-action@1.12.1
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
 
