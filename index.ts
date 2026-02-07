@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+import path from "path";
 import type { Server } from "http";
 import type Koa from "koa";
 import type { AppConfig } from "./types/config";
@@ -12,7 +13,7 @@ const { koaBody } = require("koa-body");
 const helmet = require("koa-helmet");
 const cors = require("koa2-cors");
 const userAgent = require("koa2-useragent");
-const { NewRelicMiddleware } = require("koa-mongo-crud");
+const { newRelicMiddleware } = require("./src/middleware/newrelic");
 const { koaSwagger } = require("koa2-swagger-ui");
 const serve = require("koa-static");
 const { createContainer, asValue } = require("awilix");
@@ -57,7 +58,7 @@ async function start(): Promise<Server> {
   );
 
   if (process.env.NODE_ENV === "production") {
-    app.use(NewRelicMiddleware);
+    app.use(newRelicMiddleware);
   }
   app.use(helmet());
   app.use(ErrorMiddleware);
@@ -65,21 +66,26 @@ async function start(): Promise<Server> {
   app.use(userAgent());
   app.use(DebugMiddleware);
 
-  app.use(loadControllers("./src/**/*.route.js", { cwd: __dirname })); // glob matches compiled .js in dist
+  // In dev (tsx) we run from project root and have .ts files; in prod we run from dist and have .js
+  const isCompiled = path.basename(__dirname) === "dist";
+  const routeGlob = isCompiled ? "./src/**/*.route.js" : "./src/**/*.route.ts";
+  app.use(loadControllers(routeGlob, { cwd: __dirname }));
 
   return new Promise((resolve) => {
-    const server = app.listen(Number(config.web?.port) || 3000, () => {
+    const port = Number(config.web?.port) || 3000;
+    const host = config.web?.host ?? "0.0.0.0";
+    const server = app.listen(port, host, () => {
       const address = server.address();
-      const host =
-        address && typeof address === "object" ? address.address : "unknown";
-      const port =
-        address && typeof address === "object" ? address.port : "unknown";
+      const bindHost =
+        address && typeof address === "object" ? address.address : host;
+      const bindPort =
+        address && typeof address === "object" ? address.port : port;
       console.log(
         "App %s %s listening at http://%s:%s",
         config.name,
         config.version,
-        host,
-        port,
+        bindHost,
+        bindPort,
       );
       resolve(server);
     });

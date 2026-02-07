@@ -1,7 +1,7 @@
 import type { Context, Request } from "koa";
 import { createController } from "awilix-koa";
-import { AuthMiddleware } from "koa-mongo-crud";
 import rateLimit from "koa-ratelimit";
+import { authMiddleware } from "../middleware/auth";
 import { createResponse } from "../common/response-builder";
 import GeonamesBaseController from "../common/baseController";
 import type CityService from "./city.service";
@@ -63,7 +63,7 @@ class City extends GeonamesBaseController {
 
 export default createController(City)
   .before([
-    AuthMiddleware(
+    authMiddleware(
       global.appConfig.auth,
       (global.appConfig.authAllowedRoutes as string[] | undefined) ?? [],
     ),

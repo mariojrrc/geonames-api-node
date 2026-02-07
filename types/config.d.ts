@@ -1,5 +1,6 @@
 export interface WebConfig {
   port?: number | string;
+  host?: string;
 }
 
 export interface DbConfig {

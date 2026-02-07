@@ -5,7 +5,8 @@ const logPath = path.join(__dirname, "../../logs/dev.log");
 export default {
   hostName: process.env.HOST_NAME,
   web: {
-    port: process.env.PORT,
+    port: process.env.PORT ?? 3000,
+    host: process.env.HOST ?? "0.0.0.0",
   },
   db: {
     dbName: "geonames",

@@ -1,6 +1,6 @@
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
-import { ValidationException } from "koa-mongo-crud";
+import ValidationException from "../common/ValidationException";
 import StateSchema from "../state/state.model";
 import CitySchema from "../city/city.model";
 
