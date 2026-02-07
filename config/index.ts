@@ -3,7 +3,11 @@ import path from "path";
 import type { AppConfig } from "../types/config";
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { version } = require("../package.json") as { version: string };
+const { version } = require(
+  path.join(__dirname, "..", "..", "package.json"),
+) as {
+  version: string;
+};
 
 const ENV = process.env.NODE_ENV || "development";
 
