@@ -9,6 +9,8 @@ module.exports = {
   // Stop running tests after `n` failures
   // bail: 0,
 
+  testTimeout: 30000,
+
   // Respect "browser" field in package.json when resolving modules
   // browser: false,
 
@@ -101,7 +103,7 @@ module.exports = {
 
   // An array of regexp pattern strings, matched against all module paths before
   //   considered 'visible' to the module loader
-  // modulePathIgnorePatterns: [],
+  modulePathIgnorePatterns: ["<rootDir>/dist"],
 
   // Activates notifications for test results
   // notify: false,

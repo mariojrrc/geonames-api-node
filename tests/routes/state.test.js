@@ -1,14 +1,24 @@
+const path = require("path");
+const fs = require("fs");
 const supertest = require("supertest");
 const defaults = require("superagent-defaults");
 
-const app = require("../../index");
 const { AuthorizationHeader, dropCollection, populateCollection } = require("../common.testcases");
+const useDist =
+  process.env.NODE_ENV === "test" &&
+  fs.existsSync(path.join(__dirname, "../../dist/infra/mongo.js"));
+const mongoConnection = require(
+  useDist ? path.join(__dirname, "../../dist/infra/mongo") : "../../infra/mongo"
+);
 
 describe("State", () => {
+  let app;
   let authHeaders;
   let request;
 
   beforeAll(async () => {
+    await dropCollection("states");
+    app = await require("../../index");
     request = defaults(supertest(app));
   });
 
@@ -166,8 +176,9 @@ describe("State", () => {
     });
   });
 
-  afterAll(async (done) => {
-    await dropCollection('states');
-    app.close(done);
+  afterAll(async () => {
+    await dropCollection("states");
+    await new Promise((resolve) => app.close(resolve));
+    await mongoConnection.close();
   });
 });
