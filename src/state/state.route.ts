@@ -1,7 +1,7 @@
 import type { Context, Request } from "koa";
 import { createController } from "awilix-koa";
-import { AuthMiddleware } from "koa-mongo-crud";
 import isUuid from "is-uuid";
+import { authMiddleware } from "../middleware/auth";
 import rateLimit from "koa-ratelimit";
 import { createResponse } from "../common/response-builder";
 import GeonamesBaseController from "../common/baseController";
@@ -80,7 +80,7 @@ class State extends GeonamesBaseController {
 
 export default createController(State)
   .before([
-    AuthMiddleware(
+    authMiddleware(
       global.appConfig.auth,
       (global.appConfig.authAllowedRoutes as string[] | undefined) ?? [],
     ),

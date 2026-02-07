@@ -1,9 +1,13 @@
+import path from "path";
 import type { AwilixContainer } from "awilix";
 import type { Configuration } from "log4js";
 import { asFunction, asValue, Lifetime } from "awilix";
 import Log4js from "log4js";
 import mongoConnection from "../../infra/mongo";
 import type { AppConfig } from "../../types/config";
+
+const isCompiled = __dirname.includes(`${path.sep}dist${path.sep}`);
+const ext = isCompiled ? "js" : "ts";
 
 export default async function loadGeonamesModuleContainer(
   container: AwilixContainer,
@@ -34,14 +38,14 @@ export default async function loadGeonamesModuleContainer(
   container.loadModules(
     [
       [
-        "../**/*.model.js",
+        `../**/*.model.${ext}`,
         {
           register: asValue,
           lifetime: Lifetime.SINGLETON,
         },
       ],
-      "../**/!(base*)*.service.js",
-      "../**/!(base*)*.mapper.js",
+      `../**/!(base*)*.service.${ext}`,
+      `../**/!(base*)*.mapper.${ext}`,
     ],
     {
       cwd: __dirname,

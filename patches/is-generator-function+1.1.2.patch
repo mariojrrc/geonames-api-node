@@ -1,0 +1,14 @@
+diff --git a/node_modules/is-generator-function/index.js b/node_modules/is-generator-function/index.js
+index 1234567..89abcde 100644
+--- a/node_modules/is-generator-function/index.js
++++ b/node_modules/is-generator-function/index.js
+@@ -9,6 +9,9 @@ var toStr = callBound('Object.prototype.toString');
+ var fnToStr = callBound('Function.prototype.toString');
+ 
+ var getGeneratorFunction = require('generator-function');
++if (typeof getGeneratorFunction !== 'function') {
++	getGeneratorFunction = getGeneratorFunction && getGeneratorFunction.default;
++}
+ 
+ /** @type {import('.')} */
+ module.exports = function isGeneratorFunction(fn) {

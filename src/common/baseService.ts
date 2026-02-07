@@ -1,11 +1,9 @@
 import { omit } from "lodash";
-import {
-  ValidationException,
-  DuplicationException,
-  Uuid,
-} from "koa-mongo-crud";
 import type { Context } from "koa";
 import { ApiError } from "./api-error";
+import ValidationException from "./ValidationException";
+import DuplicationException from "./DuplicationException";
+import { Uuid } from "./uuid";
 
 export interface BaseServiceOpts {
   context: Context;

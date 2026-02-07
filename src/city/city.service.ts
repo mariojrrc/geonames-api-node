@@ -1,5 +1,5 @@
 import type { Context } from "koa";
-import { ValidationException } from "koa-mongo-crud";
+import ValidationException from "../common/ValidationException";
 import { ApiError } from "../common/api-error";
 import GeonamesBaseService from "../common/baseService";
 import { validateCitySchema } from "../validator";

@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "prod": "NODE_PATH=. NODE_ENV=production node dist/index.js",
-    "dev": "NODE_PATH=. NODE_ENV=development nodemon --exec \"tsx index.ts\"",
+    "start": "node --max-http-header-size=32768 dist/index.js",
+    "prod": "NODE_PATH=. NODE_ENV=production node --max-http-header-size=32768 dist/index.js",
+    "dev": "NODE_PATH=. NODE_ENV=development NODE_OPTIONS='--max-http-header-size=32768' nodemon --exec \"tsx index.ts\"",
     "stage": "NODE_PATH=. NODE_ENV=staging node dist/index.js",
     "release": "git pull && release-it --no-npm.publish",
     "patch": "git pull && release-it patch --no-npm.publish",
@@ -17,6 +17,8 @@
     "lint-fix": "eslint --fix \"**/*.ts\" --ignore-pattern \"dist/**\" --ignore-pattern \"node_modules/**\"",
     "test": "npm run build && NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit --unhandled-rejections=strict",
     "test-ci": "npm run build && NODE_ENV=test jest --runInBand --coverage=false --detectOpenHandles --forceExit --unhandled-rejections=strict",
+    "populate:db": "NODE_ENV=development tsx command.ts populate:db",
+    "populate:db:drop": "NODE_ENV=development tsx command.ts populate:db --drop",
     "prepare": "husky",
     "postinstall": "patch-package"
   },
@@ -47,7 +49,6 @@
     "koa-helmet": "^7.1.0",
     "koa-locales": "^1.12.0",
     "koa-logger": "^3.2.1",
-    "koa-mongo-crud": "^1.2.5",
     "koa-qs": "^3.0.0",
     "koa-ratelimit": "^5.0.1",
     "koa-router": "^14.0.0",
@@ -103,11 +104,6 @@
     "supertest": "^7.0.0",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
-  },
-  "overrides": {
-    "koa-mongo-crud": {
-      "mongodb": "^6.11.0"
-    }
   },
   "lint-staged": {
     "**/*.ts": [
