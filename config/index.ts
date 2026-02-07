@@ -2,8 +2,13 @@ import "dotenv/config";
 import path from "path";
 import type { AppConfig } from "../types/config";
 
+// From source: __dirname is config/; from dist: __dirname is dist/config/
+const projectRoot =
+  path.basename(path.dirname(__dirname)) === "dist"
+    ? path.join(__dirname, "..", "..")
+    : path.join(__dirname, "..");
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const { version } = require(path.join(__dirname, "..", "package.json")) as {
+const { version } = require(path.join(projectRoot, "package.json")) as {
   version: string;
 };
 
