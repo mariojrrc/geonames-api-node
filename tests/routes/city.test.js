@@ -1,8 +1,15 @@
+const path = require("path");
+const fs = require("fs");
 const supertest = require("supertest");
 const defaults = require("superagent-defaults");
 
 const { AuthorizationHeader, dropCollection, populateCollection } = require("../common.testcases");
-const mongoConnection = require("../../infra/mongo");
+const useDist =
+  process.env.NODE_ENV === "test" &&
+  fs.existsSync(path.join(__dirname, "../../dist/infra/mongo.js"));
+const mongoConnection = require(
+  useDist ? path.join(__dirname, "../../dist/infra/mongo") : "../../infra/mongo"
+);
 
 describe("City", () => {
   let app;

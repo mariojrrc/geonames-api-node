@@ -4,18 +4,19 @@
   "description": "Example of using Node.JS with mongodb",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "prod": "NODE_PATH=. NODE_ENV=production node index.js",
-    "dev": "NODE_PATH=. NODE_ENV=development nodemon index.js",
-    "stage": "NODE_PATH=. NODE_ENV=staging node index.js",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "prod": "NODE_PATH=. NODE_ENV=production node dist/index.js",
+    "dev": "NODE_PATH=. NODE_ENV=development nodemon --exec \"tsx index.ts\"",
+    "stage": "NODE_PATH=. NODE_ENV=staging node dist/index.js",
     "release": "git pull && release-it --no-npm.publish",
     "patch": "git pull && release-it patch --no-npm.publish",
     "minor": "git pull && release-it minor --no-npm.publish",
     "major": "git pull && release-it major --no-npm.publish",
-    "lint": "eslint src/**/*.js",
-    "lint-fix": "eslint --fix src/**/*.js",
-    "test": "NODE_ENV=test jest --detectOpenHandles --forceExit --unhandled-rejections=strict",
-    "test-ci": "NODE_ENV=test jest --coverage=false --detectOpenHandles --forceExit --unhandled-rejections=strict",
+    "lint": "eslint \"**/*.ts\" --ignore-pattern \"dist/**\" --ignore-pattern \"node_modules/**\"",
+    "lint-fix": "eslint --fix \"**/*.ts\" --ignore-pattern \"dist/**\" --ignore-pattern \"node_modules/**\"",
+    "test": "npm run build && NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit --unhandled-rejections=strict",
+    "test-ci": "npm run build && NODE_ENV=test jest --runInBand --coverage=false --detectOpenHandles --forceExit --unhandled-rejections=strict",
     "prepare": "husky",
     "postinstall": "patch-package"
   },
@@ -72,6 +73,10 @@
     "@babel/eslint-parser": "^7.25.2",
     "@babel/plugin-proposal-decorators": "^7.25.2",
     "@babel/preset-env": "^7.25.2",
+    "@types/koa": "^2.15.0",
+    "@types/node": "^22.10.1",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "axios": "^1.7.7",
     "babel-jest": "^29.7.0",
     "commander": "^12.1.0",
@@ -79,6 +84,7 @@
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^28.6.0",
     "eslint-plugin-jest-formatting": "^3.1.0",
@@ -94,7 +100,9 @@
     "prettier": "^3.3.3",
     "release-it": "^17.9.0",
     "superagent-defaults": "^0.1.14",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
   },
   "overrides": {
     "koa-mongo-crud": {
@@ -102,7 +110,7 @@
     }
   },
   "lint-staged": {
-    "src/**/*.js": [
+    "**/*.ts": [
       "eslint --fix"
     ]
   },
