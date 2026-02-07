@@ -72,12 +72,21 @@ describe("City", () => {
 
   describe("If it's authenticated and with all valid parameters", () => {
     let cityId = null;
-    let stateId = '04696d2e-9421-4443-a927-21275c86026b';
+    let stateId = null;
 
     beforeAll(async () => {
       const auth = AuthorizationHeader();
       authHeaders = { Authorization: auth };
       request.set(authHeaders);
+      const stateRes = await request.post("/v1/state").send({
+        name: "Rio de Janeiro",
+        shortName: "RJ",
+      });
+      if (stateRes.statusCode === 201) {
+        stateId = stateRes.body.id;
+      } else {
+        stateId = "04696d2e-9421-4443-a927-21275c86026b";
+      }
     });
 
     it("Should create cities", async () => {
@@ -87,9 +96,9 @@ describe("City", () => {
       }
       const res = await request.post(`/v1/city`).send(cityPayload);
       expect(res.statusCode).toBe(201);
-      expect(res.body).toHaveProperty('id');
+      expect(res.body).toHaveProperty("id");
       cityId = res.body.id;
-      expect(res.body.stateId).toBe('04696d2e-9421-4443-a927-21275c86026b');
+      expect(res.body.stateId).toBe(stateId);
     });
 
     it("Should get city", async () => {
