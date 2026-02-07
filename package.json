@@ -69,7 +69,7 @@
     "@babel/core": "*",
     "@babel/plugin-proposal-decorators": "^7.8.3",
     "@babel/preset-env": "*",
-    "axios": "^0.28.0",
+    "axios": "^0.30.2",
     "babel-eslint": "^10.1.0",
     "babel-jest": "^25.4.0",
     "commander": "^9.1.0",
