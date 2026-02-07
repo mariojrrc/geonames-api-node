@@ -1,3 +1,4 @@
+import type { Context } from "koa";
 import { ValidationException } from "koa-mongo-crud";
 import { ApiError } from "../common/api-error";
 import GeonamesBaseService from "../common/baseService";
@@ -5,7 +6,7 @@ import { validateStateSchema } from "../validator";
 import type StateMapper from "./state.mapper";
 
 interface StateServiceOpts {
-  context: import("koa").Context;
+  context: Context;
   logger?: { info: (msg: string) => void; error: (err: unknown) => void };
   stateMapper: InstanceType<typeof StateMapper>;
 }

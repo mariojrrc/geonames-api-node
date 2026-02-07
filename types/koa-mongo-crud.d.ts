@@ -1,6 +1,4 @@
 declare module "koa-mongo-crud" {
-  import type { Context } from "koa";
-
   export class ValidationException extends Error {
     errors?: unknown;
     constructor(messageOrErrors?: string | unknown);

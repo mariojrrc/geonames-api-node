@@ -1,5 +1,5 @@
 import { CrudMapper } from "koa-mongo-crud";
-import type { Collection, Filter } from "mongodb";
+import type { Collection, Document, Filter } from "mongodb";
 
 export interface MapperRecord {
   _id?: string;
@@ -22,9 +22,7 @@ export default class BaseMapper extends CrudMapper {
 
   async bulk(ids: string[]): Promise<unknown[]> {
     return this.collection
-      .find({ _id: { $in: ids } } as unknown as import("mongodb").Filter<
-        import("mongodb").Document
-      >)
+      .find({ _id: { $in: ids } } as unknown as Filter<Document>)
       .toArray();
   }
 

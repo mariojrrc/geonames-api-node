@@ -1,3 +1,5 @@
+import type { Configuration } from "log4js";
+import type { Db } from "mongodb";
 import { program } from "commander";
 import has from "lodash.has";
 import Log4js from "log4js";
@@ -7,7 +9,7 @@ import mongoConnection from "./infra/mongo";
 const { version } = require("./package.json") as { version: string };
 
 if (has(config, "logging")) {
-  Log4js.configure(config.logging as import("log4js").Configuration);
+  Log4js.configure(config.logging as Configuration);
   global.logger = Log4js.getLogger();
 }
 
@@ -34,7 +36,7 @@ program
     global.logger.info("Starting");
 
     const conn = await mongoConnection(global.logger, config.db);
-    const db = conn.db(config.db.dbName) as import("mongodb").Db;
+    const db = conn.db(config.db.dbName) as Db;
 
     if (options.drop) {
       global.logger.info("dropping");

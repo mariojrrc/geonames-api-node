@@ -1,9 +1,12 @@
+import type { Context, Request } from "koa";
 import { createController } from "awilix-koa";
 import { AuthMiddleware } from "koa-mongo-crud";
 import rateLimit from "koa-ratelimit";
 import { createResponse } from "../common/response-builder";
 import GeonamesBaseController from "../common/baseController";
 import type CityService from "./city.service";
+
+type RequestWithBody = Request & { body?: Record<string, unknown> };
 
 class City extends GeonamesBaseController {
   cityService: InstanceType<typeof CityService>;
@@ -17,25 +20,21 @@ class City extends GeonamesBaseController {
     this.cityService = cityService;
   }
 
-  async cancel(ctx: import("koa").Context): Promise<void> {
+  async cancel(ctx: Context): Promise<void> {
     const response = await this.cityService.cancel(ctx.params.id as string);
     this.assert(ctx, 204, response);
     createResponse(ctx, response.body, response.statusCode);
   }
 
-  async create(ctx: import("koa").Context): Promise<void> {
+  async create(ctx: Context): Promise<void> {
     const response = await this.cityService.create(
-      (
-        ctx.request as import("koa").Request & {
-          body?: Record<string, unknown>;
-        }
-      ).body ?? {},
+      (ctx.request as RequestWithBody).body ?? {},
     );
     this.assert(ctx, 201, response);
     createResponse(ctx, response.body, response.statusCode);
   }
 
-  async get(ctx: import("koa").Context): Promise<void> {
+  async get(ctx: Context): Promise<void> {
     const response = await this.cityService.get(
       ctx.params.id as string,
       (ctx.query.deleted ?? "0") === "1",
@@ -44,20 +43,16 @@ class City extends GeonamesBaseController {
     createResponse(ctx, response.body, response.statusCode);
   }
 
-  async update(ctx: import("koa").Context): Promise<void> {
+  async update(ctx: Context): Promise<void> {
     const response = await this.cityService.updateOne(
       ctx.params.id as string,
-      (
-        ctx.request as import("koa").Request & {
-          body?: Record<string, unknown>;
-        }
-      ).body ?? {},
+      (ctx.request as RequestWithBody).body ?? {},
     );
     this.assert(ctx, 200, response);
     createResponse(ctx, response.body, response.statusCode);
   }
 
-  async list(ctx: import("koa").Context): Promise<void> {
+  async list(ctx: Context): Promise<void> {
     const response = await this.cityService.list(
       ctx.query as Record<string, unknown>,
     );
@@ -77,7 +72,7 @@ export default createController(City)
       db: new Map(),
       duration: 60 * 1000 * 1000,
       errorMessage: "Sometimes You Just Have to Slow Down.",
-      id: (ctx: import("koa").Context) => ctx.ip,
+      id: (ctx: Context) => ctx.ip,
       headers: {
         remaining: "Rate-Limit-Remaining",
         reset: "Rate-Limit-Reset",

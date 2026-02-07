@@ -1,4 +1,6 @@
-import type { Context, Next } from "koa";
+import type { Context, Next, Request } from "koa";
+
+type RequestWithBody = Request & { body?: unknown };
 
 export default async function debugMiddleware(
   ctx: Context,
@@ -8,7 +10,7 @@ export default async function debugMiddleware(
     if (ctx.request.method !== "OPTIONS") {
       let msg = `Incoming request #${ctx.request.headers["x-request-id"] ?? 0}`;
       msg += `: method ${ctx.request.method}, url ${ctx.request.url}`;
-      msg += `, body ${JSON.stringify((ctx.request as import("koa").Request & { body?: unknown }).body)}`;
+      msg += `, body ${JSON.stringify((ctx.request as RequestWithBody).body)}`;
       console.log(msg);
     }
 

@@ -1,16 +1,18 @@
+import type { AwilixContainer } from "awilix";
+import type { Configuration } from "log4js";
 import { asFunction, asValue, Lifetime } from "awilix";
 import Log4js from "log4js";
 import mongoConnection from "../../infra/mongo";
 import type { AppConfig } from "../../types/config";
 
 export default async function loadGeonamesModuleContainer(
-  container: import("awilix").AwilixContainer,
+  container: AwilixContainer,
   config: AppConfig,
-): Promise<import("awilix").AwilixContainer> {
+): Promise<AwilixContainer> {
   container.register(
     "logger",
     asFunction(() => {
-      Log4js.configure(config.logging as import("log4js").Configuration);
+      Log4js.configure(config.logging as Configuration);
       return Log4js.getLogger();
     }),
   );

@@ -1,11 +1,13 @@
 /* eslint-disable no-console */
 import type { Server } from "http";
+import type Koa from "koa";
+import type { AppConfig } from "./types/config";
 
 // Load config first so all modules can read it
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 global.appConfig = require("./config/index").default;
 
-const Koa = require("koa") as typeof import("koa");
+const KoaApp = require("koa") as typeof Koa;
 const { koaBody } = require("koa-body");
 const helmet = require("koa-helmet");
 const cors = require("koa2-cors");
@@ -18,11 +20,9 @@ const { scopePerRequest, loadControllers } = require("awilix-koa");
 const DebugMiddleware = require("./src/middleware/debug").default;
 const ErrorMiddleware = require("./src/middleware/error").default;
 const loadGeonamesModuleContainer = require("./src/container").default;
-const config = (
-  require("./config") as { default: import("./types/config").AppConfig }
-).default;
+const config = (require("./config") as { default: AppConfig }).default;
 
-const app = new Koa();
+const app = new KoaApp();
 
 async function start(): Promise<Server> {
   const container = createContainer();
