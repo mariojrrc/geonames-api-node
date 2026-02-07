@@ -124,6 +124,15 @@ describe("City", () => {
       expect(res.statusCode).toBe(200);
       expect(res.body._embedded.cities.length).toBe(1);
     });
+
+    it("Should list cities with stateId filter", async () => {
+      const res = await request.get(`/v1/city?stateId=${stateId}`);
+      expect(res.statusCode).toBe(200);
+      expect(res.body._embedded.cities.length).toBeGreaterThanOrEqual(1);
+      res.body._embedded.cities.forEach((c) => {
+        expect(c.stateId).toBe(stateId);
+      });
+    });
   });
 
   afterAll(async () => {

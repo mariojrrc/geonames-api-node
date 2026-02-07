@@ -139,6 +139,15 @@ describe("State", () => {
       expect(res.body._embedded.states.length).toBe(1);
     });
 
+    it("Should list states with q (name or shortName) filter", async () => {
+      const byName = await request.get(`/v1/state?q=Rio`);
+      expect(byName.statusCode).toBe(200);
+      expect(byName.body._embedded.states.length).toBeGreaterThanOrEqual(1);
+      const byAbbrev = await request.get(`/v1/state?q=RJ`);
+      expect(byAbbrev.statusCode).toBe(200);
+      expect(byAbbrev.body._embedded.states.length).toBeGreaterThanOrEqual(1);
+    });
+
     it("Should bulk states", async () => {
 
       const now = new Date();

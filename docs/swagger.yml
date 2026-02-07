@@ -32,6 +32,13 @@ paths:
           required: false
           description: Abbreviation for filtering.
         - in: query
+          name: q
+          schema:
+            type: "string"
+            example: "Rio"
+          required: false
+          description: Search by name or abbreviation (matches either).
+        - in: query
           name: deleted
           schema:
             type: integer
