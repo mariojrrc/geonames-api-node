@@ -1,14 +1,16 @@
 const { MongoClient } = require("mongodb");
 
-let db;
+let client;
 module.exports = async (logger, dbconfig) => {
-  if (!db) {
+  if (!client) {
     try {
-      db = await MongoClient.connect(dbconfig.uri, dbconfig.options);
-      logger.info("Database connection established");
+      client = new MongoClient(dbconfig.uri, dbconfig.options);
+      await client.connect();
+      if (logger) logger.info("Database connection established");
     } catch (err) {
-      logger.error(err);
+      if (logger) logger.error(err);
+      throw err;
     }
   }
-  return db;
+  return client;
 };

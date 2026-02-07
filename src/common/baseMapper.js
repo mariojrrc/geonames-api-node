@@ -46,7 +46,7 @@ class BaseMapper extends CrudMapper {
   }
 
   async count(query) {
-    return this.collection.count(query);
+    return this.collection.countDocuments(query);
   }
 
   async detail(id, withDeleted = false) {

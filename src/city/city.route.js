@@ -25,7 +25,7 @@ class city extends GeonamesBaseController {
   async get(ctx) {
     const response = await this.cityService.get(
       ctx.params.id,
-      (ctx.query.deleted || "0") === "1"
+      (ctx.query.deleted || "0") === "1",
     );
     this.assert(ctx, 200, response);
     responseBuilder.createResponse(ctx, response.body, response.statusCode);
@@ -34,7 +34,7 @@ class city extends GeonamesBaseController {
   async update(ctx) {
     const response = await this.cityService.updateOne(
       ctx.params.id,
-      ctx.request.body
+      ctx.request.body,
     );
     this.assert(ctx, 200, response);
     responseBuilder.createResponse(ctx, response.body, response.statusCode);
@@ -51,7 +51,7 @@ module.exports = createController(city)
   .before([
     AuthMiddleware(
       global.appConfig.auth,
-      global.appConfig.authAllowedRoutes || []
+      global.appConfig.authAllowedRoutes || [],
     ),
     rateLimit({
       driver: "memory",

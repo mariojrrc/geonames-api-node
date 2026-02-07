@@ -8,7 +8,7 @@ class Health extends GeonamesBaseController {
     responseBuilder.createResponse(
       ctx,
       { version: versionNumber, from: ctx.request.ip },
-      200
+      200,
     );
   }
 }

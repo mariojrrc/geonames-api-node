@@ -13,7 +13,7 @@ class CityMapper extends BaseMapper {
     const withDeleted = params.deleted || params.disabled || false;
     const withCount = params._count || false;
     const pageSize = parseInt(
-      params._pageSize || params.pageSize || this.pageSize
+      params._pageSize || params.pageSize || this.pageSize,
     );
     const page = parseInt(params.page || 1);
     const skip = (page - 1) * pageSize;

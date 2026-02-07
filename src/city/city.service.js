@@ -68,8 +68,7 @@ class CityService extends GeonamesBaseservice {
   }
 
   async update(id, data) {
-    const city = await this.repository.update(id, data);
-    return this.repository.update(id, { ...city });
+    return this.repository.update(id, data);
   }
 }
 

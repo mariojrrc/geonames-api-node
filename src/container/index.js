@@ -8,20 +8,20 @@ module.exports = async function loadGeonamesModuleContainer(container, config) {
     asFunction(() => {
       Log4js.configure(config.logging);
       return Log4js.getLogger();
-    })
+    }),
   );
 
   container.register(
     "mongoConnection",
-    asValue(await mongoConnection(container.resolve("logger"), config.db))
+    asValue(await mongoConnection(container.resolve("logger"), config.db)),
   );
   container.register("mapperOptions", asValue({}));
 
   container.register(
     "db",
     asFunction((cradle) =>
-      cradle.mongoConnection.db(config.db.dbName)
-    ).singleton()
+      cradle.mongoConnection.db(config.db.dbName),
+    ).singleton(),
   );
 
   container.loadModules(
@@ -50,7 +50,7 @@ module.exports = async function loadGeonamesModuleContainer(container, config) {
 
         return resourceName + namespace.replace(/\w/, (a) => a.toUpperCase());
       },
-    }
+    },
   );
 
   return container;

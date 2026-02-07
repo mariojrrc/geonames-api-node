@@ -1,4 +1,4 @@
-const validator = require("validator").default;
+const validator = require("validator");
 
 const validateUUID = (uuid = "") => {
   return validator.isUUID(uuid, 4);

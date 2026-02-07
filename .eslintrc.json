@@ -1,24 +1,19 @@
 {
-	"extends": [
-		"airbnb-base",
-		"plugin:prettier/recommended",
-		"plugin:jest-formatting/recommended"
-	],
-	"parserOptions": {
-		"ecmaVersion": 2018
-	},
-	"rules": {
-		"require-jsdoc": "off",
-		"no-console": "off",
-		"no-underscore-dangle": ["error", { "allow": ["_id"] }],
-		"max-len": ["error", { "code": 120 }],
-		"class-methods-use-this": "off"
-	},
-	"globals": {
-		"logger": false
-	},
-	"env": {
-		"jest/globals": true
-	},
-	"plugins": ["jest-formatting", "jest"]
+  "extends": ["airbnb-base", "plugin:prettier/recommended", "plugin:jest-formatting/recommended"],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "requireConfigFile": false,
+    "babelOptions": { "presets": ["@babel/preset-env"] }
+  },
+  "rules": {
+    "require-jsdoc": "off",
+    "no-console": "off",
+    "no-underscore-dangle": ["error", { "allow": ["_id"] }],
+    "max-len": ["error", { "code": 120 }],
+    "class-methods-use-this": "off"
+  },
+  "globals": { "logger": false },
+  "env": { "jest/globals": true },
+  "plugins": ["jest-formatting", "jest"]
 }

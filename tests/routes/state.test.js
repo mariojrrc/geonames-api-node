@@ -1,14 +1,15 @@
 const supertest = require("supertest");
 const defaults = require("superagent-defaults");
 
-const app = require("../../index");
 const { AuthorizationHeader, dropCollection, populateCollection } = require("../common.testcases");
 
 describe("State", () => {
+  let app;
   let authHeaders;
   let request;
 
   beforeAll(async () => {
+    app = await require("../../index");
     request = defaults(supertest(app));
   });
 
@@ -166,8 +167,8 @@ describe("State", () => {
     });
   });
 
-  afterAll(async (done) => {
-    await dropCollection('states');
-    app.close(done);
+  afterAll(async () => {
+    await dropCollection("states");
+    return new Promise((resolve) => app.close(resolve));
   });
 });

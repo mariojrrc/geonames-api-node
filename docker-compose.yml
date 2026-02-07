@@ -2,7 +2,7 @@ version: '3'
 
 services:
   geonames-mongo:
-    image: mongo:3.4
+    image: mongo:6
     container_name: geonames-mongo
     volumes:
       - ./.docker/data/mongo:/data/db:rw

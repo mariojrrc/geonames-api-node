@@ -26,7 +26,7 @@ class State extends GeonamesBaseController {
   async get(ctx) {
     const response = await this.stateService.get(
       ctx.params.id,
-      (ctx.query.deleted || "0") === "1"
+      (ctx.query.deleted || "0") === "1",
     );
     this.assert(ctx, 200, response);
     responseBuilder.createResponse(ctx, response.body, response.statusCode);
@@ -35,7 +35,7 @@ class State extends GeonamesBaseController {
   async update(ctx) {
     const response = await this.stateService.updateOne(
       ctx.params.id,
-      ctx.request.body
+      ctx.request.body,
     );
     this.assert(ctx, 200, response);
     responseBuilder.createResponse(ctx, response.body, response.statusCode);
@@ -48,12 +48,12 @@ class State extends GeonamesBaseController {
   }
 
   async bulk(ctx) {
-    const { ids } = ctx.request.body;
+    const { ids } = ctx.request.body || {};
     if (!ids || (ids || []).filter((item) => isUuid.v4(item)).length === 0) {
       return responseBuilder.createResponse(
         ctx,
         { message: "Ids must be an array of valid uuids" },
-        400
+        400,
       );
     }
     const response = await this.stateService.bulk(ids);
@@ -61,7 +61,7 @@ class State extends GeonamesBaseController {
     return responseBuilder.createResponse(
       ctx,
       response.body,
-      response.statusCode
+      response.statusCode,
     );
   }
 }
@@ -70,7 +70,7 @@ module.exports = createController(State)
   .before([
     AuthMiddleware(
       global.appConfig.auth,
-      global.appConfig.authAllowedRoutes || []
+      global.appConfig.authAllowedRoutes || [],
     ),
     rateLimit({
       driver: "memory",
