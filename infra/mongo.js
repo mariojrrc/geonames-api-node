@@ -1,7 +1,8 @@
 const { MongoClient } = require("mongodb");
 
 let client;
-module.exports = async (logger, dbconfig) => {
+
+async function connect(logger, dbconfig) {
   if (!client) {
     try {
       client = new MongoClient(dbconfig.uri, dbconfig.options);
@@ -13,4 +14,16 @@ module.exports = async (logger, dbconfig) => {
     }
   }
   return client;
-};
+}
+
+function close() {
+  if (client) {
+    const p = client.close();
+    client = null;
+    return p;
+  }
+  return Promise.resolve();
+}
+
+connect.close = close;
+module.exports = connect;

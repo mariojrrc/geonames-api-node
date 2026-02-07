@@ -2,6 +2,7 @@ const supertest = require("supertest");
 const defaults = require("superagent-defaults");
 
 const { AuthorizationHeader, dropCollection, populateCollection } = require("../common.testcases");
+const mongoConnection = require("../../infra/mongo");
 
 describe("State", () => {
   let app;
@@ -169,6 +170,7 @@ describe("State", () => {
 
   afterAll(async () => {
     await dropCollection("states");
-    return new Promise((resolve) => app.close(resolve));
+    await new Promise((resolve) => app.close(resolve));
+    await mongoConnection.close();
   });
 });
