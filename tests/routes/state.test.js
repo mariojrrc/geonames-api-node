@@ -18,8 +18,10 @@ describe("State", () => {
 
   beforeAll(async () => {
     await dropCollection("states");
-    app = await require("../../index");
-    request = defaults(supertest(app));
+    const appOrServer = await require("../../index");
+    const agent = typeof appOrServer.callback === "function" ? appOrServer.callback() : appOrServer;
+    app = appOrServer;
+    request = defaults(supertest(agent));
   });
 
   describe("If it's not logged in", () => {
@@ -187,7 +189,9 @@ describe("State", () => {
 
   afterAll(async () => {
     await dropCollection("states");
-    await new Promise((resolve) => app.close(resolve));
+    if (app && typeof app.close === "function") {
+      await new Promise((resolve) => app.close(resolve));
+    }
     await mongoConnection.close();
   });
 });

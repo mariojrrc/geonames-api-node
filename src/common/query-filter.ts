@@ -42,7 +42,7 @@ function parseStringVal(
     const n = parseInt(string, 10);
     if (!Number.isNaN(n) && String(n) === string) return n;
     const f = parseFloat(string);
-    if (!Number.isNaN(f)) return f;
+    if (!Number.isNaN(f) && String(f) === string) return f;
   }
   return string;
 }

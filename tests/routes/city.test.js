@@ -17,8 +17,10 @@ describe("City", () => {
   let request;
 
   beforeAll(async () => {
-    app = await require("../../index");
-    request = defaults(supertest(app));
+    const appOrServer = await require("../../index");
+    const agent = typeof appOrServer.callback === "function" ? appOrServer.callback() : appOrServer;
+    app = appOrServer;
+    request = defaults(supertest(agent));
   });
 
   describe("If it's not logged in", () => {
@@ -72,21 +74,12 @@ describe("City", () => {
 
   describe("If it's authenticated and with all valid parameters", () => {
     let cityId = null;
-    let stateId = null;
+    let stateId = '04696d2e-9421-4443-a927-21275c86026b';
 
     beforeAll(async () => {
       const auth = AuthorizationHeader();
       authHeaders = { Authorization: auth };
       request.set(authHeaders);
-      const stateRes = await request.post("/v1/state").send({
-        name: "Rio de Janeiro",
-        shortName: "RJ",
-      });
-      if (stateRes.statusCode === 201) {
-        stateId = stateRes.body.id;
-      } else {
-        stateId = "04696d2e-9421-4443-a927-21275c86026b";
-      }
     });
 
     it("Should create cities", async () => {
@@ -135,18 +128,28 @@ describe("City", () => {
     });
 
     it("Should list cities with stateId filter", async () => {
-      const res = await request.get(`/v1/city?stateId=${stateId}`);
+      const getRes = await request.get(`/v1/city/${cityId}`);
+      expect(getRes.statusCode).toBe(200);
+      const filterByStateId = getRes.body.stateId;
+
+      console.log(getRes.body);
+
+      console.log(filterByStateId);
+      const res = await request.get(`/v1/city?stateId=${filterByStateId}`);
       expect(res.statusCode).toBe(200);
+      console.log(res.body._embedded.cities);
       expect(res.body._embedded.cities.length).toBeGreaterThanOrEqual(1);
       res.body._embedded.cities.forEach((c) => {
-        expect(c.stateId).toBe(stateId);
+        expect(c.stateId).toBe(filterByStateId);
       });
     });
   });
 
   afterAll(async () => {
     await dropCollection("cities");
-    await new Promise((resolve) => app.close(resolve));
+    if (app && typeof app.close === "function") {
+      await new Promise((resolve) => app.close(resolve));
+    }
     await mongoConnection.close();
   });
 });
