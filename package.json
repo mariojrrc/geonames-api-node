@@ -1,6 +1,6 @@
 {
   "name": "geonames-api-node",
-  "version": "1.0.9",
+  "version": "2.0.0",
   "description": "Example of using Node.JS with mongodb",
   "main": "index.js",
   "scripts": {
