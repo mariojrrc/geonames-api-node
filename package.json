@@ -51,7 +51,7 @@
     "koa2-cors": "^2.0.6",
     "koa2-swagger-ui": "^3.0.0",
     "koa2-useragent": "^0.3.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.23",
     "lodash.has": "^4.5.2",
     "lodash.partition": "^4.6.0",
     "log4js": "^6.2.1",
