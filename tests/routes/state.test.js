@@ -18,8 +18,10 @@ describe("State", () => {
 
   beforeAll(async () => {
     await dropCollection("states");
-    app = await require("../../index");
-    request = defaults(supertest(app));
+    const appOrServer = await require("../../index");
+    const agent = typeof appOrServer.callback === "function" ? appOrServer.callback() : appOrServer;
+    app = appOrServer;
+    request = defaults(supertest(agent));
   });
 
   describe("If it's not logged in", () => {
@@ -139,6 +141,15 @@ describe("State", () => {
       expect(res.body._embedded.states.length).toBe(1);
     });
 
+    it("Should list states with q (name or shortName) filter", async () => {
+      const byName = await request.get(`/v1/state?q=Rio`);
+      expect(byName.statusCode).toBe(200);
+      expect(byName.body._embedded.states.length).toBeGreaterThanOrEqual(1);
+      const byAbbrev = await request.get(`/v1/state?q=RJ`);
+      expect(byAbbrev.statusCode).toBe(200);
+      expect(byAbbrev.body._embedded.states.length).toBeGreaterThanOrEqual(1);
+    });
+
     it("Should bulk states", async () => {
 
       const now = new Date();
@@ -178,7 +189,9 @@ describe("State", () => {
 
   afterAll(async () => {
     await dropCollection("states");
-    await new Promise((resolve) => app.close(resolve));
+    if (app && typeof app.close === "function") {
+      await new Promise((resolve) => app.close(resolve));
+    }
     await mongoConnection.close();
   });
 });

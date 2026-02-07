@@ -71,6 +71,10 @@ async function start(): Promise<Server> {
   const routeGlob = isCompiled ? "./src/**/*.route.js" : "./src/**/*.route.ts";
   app.use(loadControllers(routeGlob, { cwd: __dirname }));
 
+  if (process.env.NODE_ENV === "test") {
+    return Promise.resolve(app as unknown as Server);
+  }
+
   return new Promise((resolve) => {
     const port = Number(config.web?.port) || 3000;
     const host = config.web?.host ?? "0.0.0.0";

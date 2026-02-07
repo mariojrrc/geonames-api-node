@@ -59,6 +59,7 @@ export default class StateMapper extends BaseMapper {
       "disabled",
       "sort",
       "order",
+      "q",
     ];
     toDelete.forEach((key) => delete query[key]);
 
@@ -96,7 +97,18 @@ export default class StateMapper extends BaseMapper {
       query.name = { $regex: new RegExp(String(params.name), "i") };
     }
     if (params.shortName) {
-      query.shortName = { $regex: new RegExp(String(params.shortName), "i") };
+      query.shortName = {
+        $regex: new RegExp(String(params.shortName), "i"),
+      };
+    }
+    if (params.q) {
+      const term = new RegExp(
+        String(params.q).replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        "i",
+      );
+      query.$or = [{ name: { $regex: term } }, { shortName: { $regex: term } }];
+      delete query.name;
+      delete query.shortName;
     }
 
     const list = await this.collection
