@@ -1,6 +1,6 @@
-/* eslint-disable no-console */
+/* eslint-disable no-console, import/no-import-module-exports */
 import path from "path";
-import type { Server } from "http";
+import type { IncomingMessage, ServerResponse, Server } from "http";
 import type Koa from "koa";
 import type { AppConfig } from "./types/config";
 
@@ -25,7 +25,7 @@ const config = (require("./config") as { default: AppConfig }).default;
 
 const app = new KoaApp();
 
-async function start(): Promise<Server> {
+async function configureApp(): Promise<Koa.DefaultState & Koa.DefaultContext> {
   const container = createContainer();
   await loadGeonamesModuleContainer(container, config);
 
@@ -71,6 +71,12 @@ async function start(): Promise<Server> {
   const routeGlob = isCompiled ? "./src/**/*.route.js" : "./src/**/*.route.ts";
   app.use(loadControllers(routeGlob, { cwd: __dirname }));
 
+  return app as Koa.DefaultState & Koa.DefaultContext;
+}
+
+async function start(): Promise<Server> {
+  await configureApp();
+
   if (process.env.NODE_ENV === "test") {
     return Promise.resolve(app as unknown as Server);
   }
@@ -96,5 +102,25 @@ async function start(): Promise<Server> {
   });
 }
 
-const serverPromise = start();
-export = serverPromise;
+// Vercel serverless: export request handler
+if (process.env.VERCEL) {
+  let appPromise: Promise<Koa.DefaultState & Koa.DefaultContext> | null = null;
+  const getApp = (): Promise<Koa.DefaultState & Koa.DefaultContext> => {
+    if (!appPromise) appPromise = configureApp();
+    return appPromise;
+  };
+
+  module.exports = async (
+    req: IncomingMessage,
+    res: ServerResponse,
+  ): Promise<void> => {
+    const configuredApp = await getApp();
+    const handler = configuredApp.callback();
+    const result = handler(req, res);
+    if (result && typeof (result as Promise<unknown>).then === "function") {
+      await (result as Promise<void>);
+    }
+  };
+} else {
+  module.exports = start();
+}
