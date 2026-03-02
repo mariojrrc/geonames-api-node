@@ -114,11 +114,23 @@ if (process.env.VERCEL) {
     req: IncomingMessage,
     res: ServerResponse,
   ): Promise<void> => {
-    const configuredApp = await getApp();
-    const handler = configuredApp.callback();
-    const result = handler(req, res);
-    if (result && typeof (result as Promise<unknown>).then === "function") {
-      await (result as Promise<void>);
+    try {
+      const configuredApp = await getApp();
+      const handler = configuredApp.callback();
+      const result = handler(req, res);
+      if (result && typeof (result as Promise<unknown>).then === "function") {
+        await (result as Promise<void>);
+      }
+    } catch (err) {
+      console.error("FUNCTION_INVOCATION_FAILED:", err);
+      res.statusCode = 500;
+      res.setHeader("Content-Type", "application/json");
+      res.end(
+        JSON.stringify({
+          error: "Internal Server Error",
+          message: err instanceof Error ? err.message : String(err),
+        }),
+      );
     }
   };
 } else {
