@@ -30,6 +30,16 @@ The endpoint's documentation is located in `/docs` folder. It was written on top
 2. Optionally run `docker exec -it geonames-node bash -c 'node command.js populate:db --drop'` to seed the database. 
 3. Make calls to the endpoints via [Postman](https://www.getpostman.com/) or similar in the following address `0.0.0.0:8080/v1/state`
 
+## Deploying to Vercel
+
+1. Install the Vercel CLI: `npm i -g vercel`
+2. Set environment variables in the [Vercel Dashboard](https://vercel.com/dashboard) (Project → Settings → Environment Variables):
+   - `DATABASE_URL` – MongoDB connection string (e.g. MongoDB Atlas)
+   - `SECRET_KEY` – optional, for auth
+3. Deploy: `vercel` (or connect your Git repo for automatic deploys)
+
+Note: On Vercel, `NODE_ENV` and `VERCEL` are set automatically.
+
 ## Running tests
 1. Run `npm run test`
 
