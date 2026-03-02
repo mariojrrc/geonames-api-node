@@ -16,7 +16,16 @@ export default async function loadGeonamesModuleContainer(
   container.register(
     "logger",
     asFunction(() => {
-      Log4js.configure(config.logging as Configuration);
+      const loggingConfig = { ...config.logging } as Configuration;
+      if (process.env.VERCEL) {
+        loggingConfig.appenders = {
+          console: { type: "console", layout: { type: "basic" } },
+        };
+        loggingConfig.categories = {
+          default: { appenders: ["console"], level: "info" },
+        };
+      }
+      Log4js.configure(loggingConfig);
       return Log4js.getLogger();
     }),
   );
