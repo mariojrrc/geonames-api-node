@@ -14,13 +14,21 @@ const { version } = require(path.join(projectRoot, "package.json")) as {
 
 const ENV = process.env.NODE_ENV || "development";
 
-const envPath = path.join(__dirname, "environments", `${ENV}.js`);
-// Use require for dynamic env module (compiled to .js in dist)
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const envConfig = require(envPath).default as Omit<
+// Static requires for Vercel/serverless bundlers that don't trace dynamic paths
+let envConfig: Omit<
   AppConfig,
   "env" | "name" | "version" | "secretKey" | "auth"
 >;
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+if (ENV === "production") {
+  envConfig = require("./environments/production").default;
+} else if (ENV === "staging") {
+  envConfig = require("./environments/staging").default;
+} else if (ENV === "test") {
+  envConfig = require("./environments/test").default;
+} else {
+  envConfig = require("./environments/development").default;
+}
 
 const config: AppConfig = {
   [ENV]: true,
