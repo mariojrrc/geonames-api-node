@@ -13,7 +13,6 @@ const { koaBody } = require("koa-body");
 const helmet = require("koa-helmet");
 const cors = require("koa2-cors");
 const userAgent = require("koa2-useragent");
-const { newRelicMiddleware } = require("./src/middleware/newrelic");
 const { koaSwagger } = require("koa2-swagger-ui");
 const serve = require("koa-static");
 const { createContainer, asValue } = require("awilix");
@@ -57,7 +56,8 @@ async function configureApp(): Promise<Koa.DefaultState & Koa.DefaultContext> {
     }),
   );
 
-  if (process.env.NODE_ENV === "production") {
+  if (process.env.NODE_ENV === "production" && process.env.NEW_RELIC_APP_NAME) {
+    const { newRelicMiddleware } = require("./src/middleware/newrelic");
     app.use(newRelicMiddleware);
   }
   app.use(helmet());
