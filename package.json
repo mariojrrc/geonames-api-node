@@ -43,7 +43,7 @@
     "http-status": "^1.7.4",
     "is-uuid": "^1.0.2",
     "jsonwebtoken": "^9.0.2",
-    "koa": "^2.8.2",
+    "koa": "^3.1.2",
     "koa-body": "^6.0.1",
     "koa-compress": "^5.1.0",
     "koa-helmet": "^7.1.0",
